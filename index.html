@@ -1,0 +1,2227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Stackly • 100% cover mobile menu (no search)</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f5f9ff;
+      color: #1e1e2f;
+      min-height: 100vh;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: #0f1a2b;
+      border-bottom: 4px solid #2b6cff;
+      padding: 0.5rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 2000;
+      box-shadow: 0 8px 20px -8px rgba(0,0,0,0.5);
+    }
+
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 70px;
+    }
+
+    .logo a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    
+    .logo img {
+      height: auto;
+      width: 140px;
+      max-width: 160px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    /* Desktop menu - hidden on mobile */
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      gap: 0.3rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #e6ecf5;
+      font-weight: 500;
+      padding: 0.6rem 1rem;
+      border-radius: 40px;
+      text-decoration: none;
+      transition: 0.2s;
+      border: 1px solid transparent;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .nav-link i {
+      color: #2b6cff;
+      font-size: 1rem;
+    }
+
+    .nav-link:hover {
+      background: rgba(43, 108, 255, 0.15);
+      border-color: #2b6cff;
+      color: white;
+    }
+
+    /* Dropdown desktop */
+    .nav-item {
+      position: relative;
+    }
+
+    .dropdown-content {
+      position: absolute;
+      top: 48px;
+      left: 0;
+      background: #0f1a2b;
+      min-width: 220px;
+      border-radius: 20px;
+      padding: 0.6rem 0;
+      box-shadow: 0 25px 35px -12px #000000cc, 0 0 0 1px #2b6cff;
+      border: 1px solid #2b6cff;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(12px);
+      transition: 0.25s ease;
+      z-index: 100;
+    }
+
+    .dropdown-content.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(6px);
+    }
+
+    .dropdown-content a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #d3e0ff;
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: 0.15s;
+      border-left: 4px solid transparent;
+    }
+
+    .dropdown-content a i {
+      width: 22px;
+      color: #2b6cff;
+    }
+
+    .dropdown-content a:hover {
+      background: #1a2f4a;
+      border-left-color: #2b6cff;
+      color: white;
+    }
+
+    /* Desktop right side - ONLY LOGIN (search removed) */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .login-btn {
+      background: transparent;
+      border: 2px solid #2b6cff;
+      border-radius: 60px;
+      padding: 0.6rem 1.5rem;
+      color: white;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+      text-decoration: none;
+      white-space: nowrap;
+      font-size: 0.95rem;
+    }
+
+    .login-btn i {
+      font-size: 1rem;
+    }
+
+    .login-btn:hover {
+      background: #2b6cff;
+      color: white;
+      border-color: white;
+    }
+
+    /* Hamburger - perfect for mobile */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 48px;
+      height: 48px;
+      background: #1f2b3f;
+      border-radius: 16px;
+      border: 2px solid #2b6cff;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    
+    .hamburger:hover {
+      background: #2b6cff;
+    }
+    
+    .hamburger span {
+      width: 26px;
+      height: 3px;
+      background: white;
+      margin: 3px 0;
+      border-radius: 4px;
+      transition: 0.2s;
+    }
+
+    /* ===== 100% COVER MOBILE DRAWER (FULL SCREEN) ===== */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(3px);
+      z-index: 2999;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s;
+    }
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;        /* 100% width */
+      height: 100vh;       /* 100% height */
+      background: #0a1322;
+      z-index: 3000;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+      border-right: none;   /* no border, full coverage */
+      box-shadow: none;
+      overflow-y: auto;
+    }
+
+    .mobile-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      border-bottom: 2px solid #1f3a70;
+      padding-bottom: 1.2rem;
+    }
+
+    .drawer-logo img {
+      height: auto;
+      width: 150px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    .close-drawer {
+      background: #1f3a70;
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      color: white;
+      cursor: pointer;
+      border: 2px solid #2b6cff;
+      transition: 0.2s;
+    }
+    
+    .close-drawer:hover {
+      background: #2b6cff;
+    }
+
+    .mobile-menu {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 1rem;
+    }
+
+    .mobile-item {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 1.1rem 1.5rem;
+      background: #132132;
+      border-radius: 60px;
+      border: 2px solid #2b6cff;
+      color: #eef4ff;
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .mobile-item i {
+      color: #2b6cff;
+      width: 28px;
+      font-size: 1.3rem;
+    }
+    
+    .mobile-item:hover {
+      background: #1f3a70;
+      transform: translateX(8px);
+    }
+
+    .mobile-dropdown {
+      margin-bottom: 0;
+    }
+    
+    .mobile-dropdown-toggle {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 1.1rem 1.5rem;
+      background: #132132;
+      border-radius: 60px;
+      border: 2px solid #2b6cff;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 500;
+      cursor: pointer;
+      justify-content: space-between;
+      transition: 0.2s;
+    }
+    
+    .mobile-dropdown-toggle:hover {
+      background: #1f3a70;
+    }
+    
+    .mobile-submenu {
+      display: none;
+      margin-left: 1.2rem;
+      margin-top: 10px;
+      padding-left: 1rem;
+      border-left: 4px solid #2b6cff;
+    }
+    
+    .mobile-submenu a {
+      display: block;
+      padding: 1rem 1.5rem;
+      background: #0e1a2a;
+      border-radius: 50px;
+      margin: 8px 0;
+      color: #b9d0ff;
+      text-decoration: none;
+      border-left: 4px solid transparent;
+      font-size: 1.1rem;
+    }
+    
+    .mobile-submenu a i {
+      margin-right: 12px;
+      color: #2b6cff;
+      width: 24px;
+    }
+    
+    .mobile-submenu a:hover {
+      background: #1f2f4a;
+      border-left-color: #2b6cff;
+    }
+    
+    .mobile-dropdown.open .mobile-submenu {
+      display: block;
+    }
+
+    /* Mobile login button - bigger for full screen */
+    .mobile-login {
+      background: #2b6cff;
+      border: none;
+      border-radius: 60px;
+      padding: 1.2rem;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 2rem;
+      text-decoration: none;
+      border: 2px solid white;
+      transition: 0.2s;
+    }
+    
+    .mobile-login:hover {
+      background: white;
+      color: #0f1a2b;
+    }
+    
+    .mobile-login i {
+      color: #0f1a2b;
+      font-size: 1.3rem;
+    }
+
+    /* RESPONSIVE: show hamburger on mobile */
+    @media screen and (max-width: 1024px) {
+      .nav-menu, .nav-actions {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
+      .navbar {
+        padding: 0.3rem 1rem;
+      }
+    }
+
+    /* Small phones adjustments */
+    @media screen and (max-width: 400px) {
+      .logo img {
+        width: 120px;
+      }
+      .hamburger {
+        width: 44px;
+        height: 44px;
+      }
+      .mobile-drawer {
+        padding: 1.5rem 1rem;
+      }
+      .mobile-item, .mobile-dropdown-toggle {
+        padding: 0.9rem 1.2rem;
+        font-size: 1.1rem;
+      }
+      .close-drawer {
+        width: 48px;
+        height: 48px;
+        font-size: 2rem;
+      }
+    }
+
+    /* Demo content */
+    .demo-content {
+      max-width: 900px;
+      margin: 4rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 40px;
+      border: 2px solid #2b6cff;
+      text-align: center;
+    }
+    .demo-content h1 {
+      color: #0f1a2b;
+      margin-bottom: 1rem;
+    }
+    .cover-note {
+      background: #2b6cff20;
+      padding: 1.2rem;
+      border-radius: 30px;
+      color: #0f1a2b;
+      margin-top: 2rem;
+      border: 2px dashed #2b6cff;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR (DESKTOP + MOBILE HAMBURGER) ===== -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <a href="index.html">
+          <img src="stacklylogo (3).webp" alt="Stackly">
+        </a>
+      </div>
+
+      <!-- Desktop menu (hidden on mobile) -->
+      <ul class="nav-menu">
+        <li class="nav-item" id="desktopDropdown">
+          <a class="nav-link" id="desktopDropdownToggle">
+            <i class="fas fa-home"></i> Home <i class="fas fa-chevron-down"></i>
+          </a>
+          <div class="dropdown-content" id="desktopDropdownMenu">
+            <a href="index.html"><i class="fas fa-compass"></i> Home1</a>
+            <a href="home.html"><i class="fas fa-chart-pie"></i> Home2</a>
+          </div>
+        </li>
+        <li><a href="soluation.html" class="nav-link"><i class="fas fa-compass"></i> Solutions</a></li>
+        <li><a href="dashboard.html" class="nav-link"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+        <li><a href="services.html" class="nav-link"><i class="fas fa-cogs"></i> Services</a></li>
+        <li><a href="about.html" class="nav-link"><i class="fas fa-users"></i> About</a></li>
+        <li><a href="blog.html" class="nav-link"><i class="fas fa-blog"></i> Blog</a></li>
+      </ul>
+
+      <!-- Desktop actions: ONLY LOGIN (search removed) -->
+      <div class="nav-actions">
+        <a href="login.html" class="login-btn"><i class="fas fa-user"></i> Login</a>
+      </div>
+
+      <!-- Hamburger for mobile -->
+      <div class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Overlay (semi-transparent) -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  
+  <!-- 100% COVER MOBILE DRAWER - FULL SCREEN -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-header">
+      <div class="drawer-logo">
+        <img src="stacklylogo (3).webp" alt="logo">
+      </div>
+      <div class="close-drawer" id="closeDrawer"><i class="fas fa-times"></i></div>
+    </div>
+
+    <div class="mobile-menu">
+      <!-- Mobile dropdown for Home -->
+      <div class="mobile-dropdown" id="mobileDropdown">
+        <div class="mobile-dropdown-toggle" id="mobileDropdownToggle">
+          <span><i class="fas fa-home"></i> Home</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="mobile-submenu">
+          <a href="index.html"><i class="fas fa-compass"></i> Home1</a>
+          <a href="home.html"><i class="fas fa-chart-pie"></i> Home2</a>
+        </div>
+      </div>
+
+      <a href="soluation.html" class="mobile-item"><i class="fas fa-compass"></i> Solutions</a>
+      <a href="dashboard.html" class="mobile-item"><i class="fas fa-chart-pie"></i> Dashboard</a>
+      <a href="services.html" class="mobile-item"><i class="fas fa-cogs"></i> Services</a>
+      <a href="about.html" class="mobile-item"><i class="fas fa-users"></i> About</a>
+      <a href="blog.html" class="mobile-item"><i class="fas fa-blog"></i> Blog</a>
+    </div>
+
+    <!-- Mobile login button (big and prominent) -->
+    <a href="login.html" class="mobile-login"><i class="fas fa-user"></i> Login</a>
+  </div>
+
+
+  <script>
+    (function() {
+      // ===== DESKTOP DROPDOWN =====
+      const desktopToggle = document.getElementById('desktopDropdownToggle');
+      const desktopMenu = document.getElementById('desktopDropdownMenu');
+      const desktopItem = document.getElementById('desktopDropdown');
+
+      if (desktopToggle && desktopMenu) {
+        desktopToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          desktopMenu.classList.toggle('show');
+          const chevron = desktopToggle.querySelector('.fa-chevron-down');
+          if (chevron) {
+            chevron.style.transform = desktopMenu.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
+          }
+        });
+
+        document.addEventListener('click', function(e) {
+          if (!desktopItem.contains(e.target)) {
+            desktopMenu.classList.remove('show');
+            const chevron = desktopToggle.querySelector('.fa-chevron-down');
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
+          }
+        });
+      }
+
+      // ===== MOBILE DRAWER - FULL SCREEN =====
+      const hamburger = document.getElementById('hamburgerBtn');
+      const drawer = document.getElementById('mobileDrawer');
+      const overlay = document.getElementById('drawerOverlay');
+      const closeBtn = document.getElementById('closeDrawer');
+
+      function openDrawer() {
+        drawer.classList.add('open');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // prevent background scroll
+      }
+      
+      function closeDrawer() {
+        drawer.classList.remove('open');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      if (hamburger) hamburger.addEventListener('click', openDrawer);
+      if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+      if (overlay) overlay.addEventListener('click', closeDrawer);
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+      });
+
+      // ===== MOBILE DROPDOWN TOGGLE =====
+      const mobileToggle = document.getElementById('mobileDropdownToggle');
+      const mobileDropdown = document.getElementById('mobileDropdown');
+      
+      if (mobileToggle && mobileDropdown) {
+        mobileToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          mobileDropdown.classList.toggle('open');
+          const chevron = mobileToggle.querySelector('.fa-chevron-down');
+          if (chevron) {
+            chevron.style.transform = mobileDropdown.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+          }
+        });
+      }
+
+      // No search functionality - verified
+      console.log('100% cover mobile menu ready');
+    })();
+  </script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Stackly · mobile perfect</title>
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Poppins (consistent with all sections) -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ----- GLOBAL RESET (mobile first) ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #ffffff;
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    /* ----- HERO SECTION (mobile refined) ----- */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh; /* will adjust on very small screens via min-height */
+      min-height: 650px; /* ensures content not squeezed */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .video-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .video-background video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.65); /* slightly darker for readability */
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 1200px;
+      padding: 0 24px;  /* comfortable side padding on mobile */
+      margin: 0 auto;
+      color: white;
+      text-align: left;
+    }
+
+    /* hero text stack — using rem/vw for smooth scaling */
+    .hero-text .line1 {
+      font-size: clamp(26px, 7vw, 48px);
+      font-weight: 500;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .hero-text .line2 {
+      font-size: clamp(34px, 9vw, 68px);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .hero-text .line2 span {
+      display: block;
+    }
+
+    .hero-text .line3 {
+      font-size: clamp(28px, 7vw, 58px);
+      font-weight: 700;
+      line-height: 1.2;
+      color: #3b82f6;
+      max-width: 900px;
+    }
+
+    .hero-text .line3 span {
+      display: inline; /* keep sentence inline but wrap nicely */
+    }
+
+    /* additional description (from your last line3 long text) */
+    .hero-description {
+      font-size: 16px;
+      font-weight: 400;
+      color: #e0e0e0;
+      margin-top: 16px;
+      max-width: 580px;
+      line-height: 1.5;
+    }
+
+    /* see how / contact button */
+    .see-how {
+      margin: 32px 0 40px 0;
+    }
+
+    .see-how a {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 2px solid #3b82f6;
+      padding-bottom: 6px;
+      transition: 0.2s;
+    }
+
+    .see-how a:hover {
+      gap: 14px;
+      border-bottom-color: #fff;
+    }
+
+    .see-how i {
+      font-size: 22px;
+      color: #3b82f6;
+    }
+
+    /* follow us row — mobile friendly */
+    .follow-us {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px 20px;
+    }
+
+    .follow-us span {
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      opacity: 0.9;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 18px;
+    }
+
+    .social-icons a {
+      color: white;
+      font-size: 22px;
+      transition: 0.2s;
+      opacity: 0.8;
+    }
+
+    .social-icons a:hover {
+      opacity: 1;
+      color: #3b82f6;
+      transform: translateY(-2px);
+    }
+
+    /* ===== TRUSTED BANDS (MOBILE OPTIMIZED) ===== */
+    .trusted-section {
+      width: 100%;
+      padding: 50px 20px;
+      background: #f5f5f5;
+      text-align: center;
+    }
+
+    .trusted-section h2 {
+      font-size: 18px; /* base mobile */
+      font-weight: 500;
+      color: #222;
+      margin-bottom: 32px;
+      line-height: 1.4;
+      padding: 0 6px;
+    }
+
+    .trusted-section h2 b {
+      font-weight: 600;
+    }
+
+    .brand-logos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;   /* smaller gap mobile */
+      flex-wrap: wrap;
+    }
+
+    .brand-logos img {
+      height: 32px;  /* mobile friendly */
+      object-fit: contain;
+      opacity: 0.8;
+      transition: 0.2s;
+      max-width: 100px;
+    }
+
+    .brand-logos img:hover {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    /* ===== FEATURE ROWS (with reveal, mobile perfect) ===== */
+    .stackly-links {
+      padding: 60px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .link-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      margin-bottom: 70px;
+      flex-wrap: wrap;  /* critical for mobile */
+    }
+
+    .reverse {
+      flex-direction: row-reverse;
+      flex-wrap: wrap;
+    }
+
+    .link-img {
+      flex: 1 1 280px;
+      opacity: 0;
+      transform: translateX(-30px);
+      transition: 0.8s ease;
+    }
+
+    .reverse .link-img {
+      transform: translateX(30px);
+    }
+
+    .link-content {
+      flex: 1 1 280px;
+      opacity: 0;
+      transform: translateX(30px);
+      transition: 0.8s ease;
+    }
+
+    .reverse .link-content {
+      transform: translateX(-30px);
+    }
+
+    .link-row.active .link-img,
+    .link-row.active .link-content {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .link-img img {
+      width: 100%;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+
+    .link-content h3 {
+      font-size: 26px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #111;
+      line-height: 1.2;
+    }
+
+    .link-content p {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 24px;
+      font-size: 16px;
+    }
+
+    .arrow-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #0b5cff;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+      border: none;
+      font-size: 16px;
+    }
+
+    .arrow-btn:hover {
+      background: #083fbe;
+    }
+
+    /* ===== AWARDS SLIDER (mobile refined) ===== */
+    .awards-section {
+      width: 100%;
+      padding: 60px 0 70px 0;
+      background: #f8f9ff;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .awards-title {
+      font-size: 28px;
+      margin-bottom: 36px;
+      color: #222;
+      font-weight: 600;
+      padding: 0 15px;
+    }
+
+    .awards-slider {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .awards-track {
+      display: flex;
+      width: calc(200px * 12); /* enough width */
+      animation: scrollAwards 22s linear infinite;
+    }
+
+    .awards-track img {
+      width: 160px;   /* mobile */
+      height: 80px;
+      object-fit: contain;
+      margin: 0 15px;
+      filter: grayscale(100%);
+      opacity: 0.7;
+      transition: 0.2s;
+    }
+
+    .awards-track img:hover {
+      filter: none;
+      opacity: 1;
+    }
+
+    @keyframes scrollAwards {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ===== VIDEO + TEXT SPLIT (mobile) ===== */
+    #stacklyHeroSection {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 60px 20px;
+      gap: 40px;
+      background: #f6f7f8;
+      flex-wrap: wrap;
+    }
+
+    #stacklyHeroVideo {
+      flex: 1 1 300px;
+    }
+
+    #stacklyHeroVideo video {
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    #stacklyHeroContent {
+      flex: 1 1 300px;
+    }
+
+    #stacklyHeroTitle {
+      font-size: clamp(26px, 6vw, 38px);
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    #stacklyHeroText {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #555;
+      margin-bottom: 28px;
+    }
+
+    #stacklyHeroBtn {
+      background: #6c5fe0;
+      color: white;
+      border: none;
+      padding: 14px 34px;
+      border-radius: 40px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    #stacklyHeroBtn:hover {
+      background: #8fd046;
+      color: #000;
+    }
+
+    /* ===== TESTIMONIAL (MOBILE) ===== */
+    #stkTestiSection {
+      width: 100%;
+      padding: 70px 20px;
+      background: #f4f6fb;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .stkTestiContainer {
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .stkTestiCard {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.06);
+    }
+
+    .stkTestiContent {
+      padding: 40px 30px;
+    }
+
+    .stkTestiStars {
+      color: #2d6cdf;
+      font-size: 22px;
+      margin-bottom: 18px;
+    }
+
+    .stkTestiQuote {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #222;
+      margin-bottom: 24px;
+    }
+
+    .stkTestiAuthor {
+      font-weight: 600;
+      font-size: 17px;
+    }
+
+    .stkTestiRole {
+      color: #777;
+      margin-left: 5px;
+    }
+
+    .stkTestiImage img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .stkTestiBtn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      background: white;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      cursor: pointer;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+      z-index: 10;
+    }
+
+    .stkTestiBtn:hover {
+      background: #0b5cff;
+      color: white;
+    }
+
+    #stkTestiPrev { left: -18px; }
+    #stkTestiNext { right: -18px; }
+
+    /* ----- MOBILE OVERRIDES (everything looks crisp) ----- */
+    @media (max-width: 800px) {
+      .hero {
+        min-height: 600px;
+        height: auto;
+        padding: 40px 0;
+      }
+
+      .hero-content {
+        padding: 0 22px;
+      }
+
+      .hero-text .line3 {
+        font-size: clamp(24px, 6vw, 40px);
+      }
+
+      .hero-description {
+        font-size: 15px;
+      }
+
+      .see-how {
+        margin: 30px 0 35px;
+      }
+
+      .brand-logos img {
+        width: 128px;
+        height: 20px;
+      }
+
+      .trusted-section h2 {
+        font-size: 16px;
+      }
+
+      /* feature rows: force column */
+      .link-row, .reverse {
+        flex-direction: column !important;
+        gap: 30px;
+        margin-bottom: 60px;
+      }
+
+      .link-img, .link-content {
+        transform: none !important; /* overwrite animation shift on mobile, but keep opacity */
+        width: 100%;
+      }
+
+      .link-content h3 {
+        font-size: 24px;
+      }
+
+      .awards-title {
+        font-size: 24px;
+      }
+
+      .awards-track img {
+        width: 130px;
+        height: 65px;
+        margin: 0 10px;
+      }
+
+      #stacklyHeroSection {
+        flex-direction: column;
+        text-align: center;
+        padding: 50px 20px;
+      }
+
+      #stacklyHeroTitle {
+        font-size: 28px;
+      }
+
+      .stkTestiCard {
+        grid-template-columns: 1fr;  /* stack image below */
+      }
+
+      .stkTestiContent {
+        padding: 30px 20px;
+      }
+
+      .stkTestiImage img {
+        max-height: 280px;
+        width: 100%;
+      }
+
+      .stkTestiBtn {
+        top: auto;
+        bottom: -20px;
+        transform: none;
+        width: 46px;
+        height: 46px;
+      }
+
+      #stkTestiPrev { left: 25%; }
+      #stkTestiNext { right: 25%; }
+    }
+
+    /* very small devices (below 400px) */
+    @media (max-width: 420px) {
+      .hero-text .line1 { font-size: 24px; }
+      .hero-text .line2 { font-size: 32px; }
+      .hero-text .line3 { font-size: 26px; }
+      .follow-us {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .social-icons a { font-size: 24px; }
+      .brand-logos img { height: 26px; }
+      .stkTestiQuote { font-size: 16px; }
+      .awards-track img { width: 110px; }
+    }
+
+    /* reveal init (global) */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: 1s ease;
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* we used separate .link-img, .link-content but also keep reveal for rows */
+    .link-row {
+      transition: none; /* handled individually */
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========== HERO (with your last video + description) ========== -->
+<section class="hero">
+  <div class="video-background">
+    <!-- using your provided video file name (adjust if needed) -->
+    <video autoplay muted loop playsinline>
+      <source src="https://videos.pexels.com/video-files/3129671/3129671-uhd_3840_2160_30fps.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="overlay"></div>
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="line1">Stackly Payment Gateway –</div>
+      <div class="line2"><span>so you can</span></div>
+      <div class="line3"><span>accept digital payments quickly and securely.</span></div>
+    </div>
+    <!-- short description from your final snippet -->
+    <div class="hero-description">
+      Stackly enables businesses to accept online payments smoothly. 💳⚡
+    </div>
+    <div class="see-how">
+      <a href="404.html">Contact Us <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="follow-us">
+      <span>Follow us</span>
+      <div class="social-icons">
+        <a href="404.html"><i class="fab fa-linkedin-in"></i></a>
+        <a href="404.html"><i class="fab fa-twitter"></i></a>
+        <a href="404.html"><i class="fab fa-facebook-f"></i></a>
+        <a href="404.html"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== TRUSTED BRANDS (exactly as reference, mobile OK) ========== -->
+<section class="trusted-section">
+  <h2>Trusted payment platform for <b>2,50,000+ Indian brands</b></h2>
+  <div class="brand-logos">
+    <img src="cred.webp" alt="Cred">
+    <img src="zoomcar.webp" alt="Zoomcar">
+    <img src="porter.webp" alt="Porter">
+    <img src="fiter.webp" alt="Fittr">
+  </div>
+</section>
+
+<!-- ========== FEATURE ROWS (with reveal) ========== -->
+<section class="stackly-links">
+  <!-- row 1 -->
+  <div class="link-row reveal">
+    <div class="link-img"><img src="fastticket.webp" alt="payment links"></div>
+    <div class="link-content">
+      <h3>Create Payment Links</h3>
+      <p>Generate secure payment links and share them instantly via WhatsApp, email, or SMS. Customers can complete payments without visiting your website, making checkout faster.</p>
+      <a href="404.html" class="arrow-btn">Explore <span class="arrow">→</span></a>
+    </div>
+  </div>
+  <!-- row 2 reverse -->
+  <div class="link-row reverse reveal">
+    <div class="link-img"><img src="hero2.webp" alt="instant collections"></div>
+    <div class="link-content">
+      <h3>Instant Collections</h3>
+      <p>Collect payments faster using Stackly with automatic reconciliation and real-time alerts. Reduce manual work, improve cash flow, and give customers a secure experience.</p>
+      <a href="404.html" class="arrow-btn">Explore <span class="arrow">→</span></a>
+    </div>
+  </div>
+  <!-- row 3 -->
+  <div class="link-row reveal">
+    <div class="link-img"><img src="hero1.webp" alt="invoice payments"></div>
+    <div class="link-content">
+      <h3>Invoice Payments</h3>
+      <p>Send professional invoices and allow customers to pay instantly online. Each invoice includes a secure payment link, simplifying billing and tracking.</p>
+      <a href="404.html" class="arrow-btn">Explore <span class="arrow">→</span></a>
+    </div>
+  </div>
+  <!-- row 4 reverse -->
+  <div class="link-row reverse reveal">
+    <div class="link-img"><img src="a10.webp" alt="mobile checkout"></div>
+    <div class="link-content">
+      <h3>Mobile Friendly Checkout</h3>
+      <p>Fully optimized for smartphone users. Minimal steps, fast loading, and responsive design improve payment success rates on all devices.</p>
+      <a href="404.html" class="arrow-btn">Explore <span class="arrow">→</span></a>
+    </div>
+  </div>
+  <!-- row 5 -->
+  <div class="link-row reveal">
+    <div class="link-img"><img src="a13.webp" alt="real-time alerts"></div>
+    <div class="link-content">
+      <h3>Real-time Payment Alerts</h3>
+      <p>Instant notifications when a payment is completed. Stay updated without refreshing dashboards — faster order processing and happy customers.</p>
+      <a href="404.html" class="arrow-btn">Explore <span class="arrow">→</span></a>
+    </div>
+  </div>
+  <!-- row 6 reverse -->
+  <div class="link-row reverse reveal">
+    <div class="link-img"><img src="digital22.webp" alt="secure processing"></div>
+    <div class="link-content">
+      <h3>Secure Payment Processing</h3>
+      <p>Advanced encryption and bank-grade security keep every transaction safe. Your customers’ data remains confidential, always.</p>
+      <a href="404.html" class="arrow-btn">Explore <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ========== AWARDS SLIDER ========== -->
+<section class="awards-section">
+  <h2 class="awards-title">Awards & Payment Certifications</h2>
+  <div class="awards-slider">
+    <div class="awards-track">
+      <img src="award.webp" alt="award">
+      <img src="award1.webp" alt="award1">
+      <img src="award2.webp" alt="award2">
+      <img src="award5.webp" alt="award5">
+      <img src="awrd2.webp" alt="awrd2">
+      <!-- duplicate for seamless loop -->
+      <img src="award.webp" alt="award">
+      <img src="award1.webp" alt="award1">
+      <img src="award2.webp" alt="award2">
+      <img src="award5.webp" alt="award5">
+      <img src="awrd2.webp" alt="awrd2">
+    </div>
+  </div>
+</section>
+
+<!-- ========== VIDEO + TEXT (split) ========== -->
+<section id="stacklyHeroSection">
+  <div id="stacklyHeroVideo">
+    <video autoplay muted loop playsinline>
+      <source src="21844-322234054_medium.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div id="stacklyHeroContent">
+    <h1 id="stacklyHeroTitle">Capture Every Payment with Stackly</h1>
+    <p id="stacklyHeroText">Businesses lose billions due to drop-offs. Stackly ensures high success rates, instant retries, and seamless checkout so you never miss a sale.</p>
+    <a href="404.html"><button id="stacklyHeroBtn">Let's Talk</button></a>
+  </div>
+</section>
+
+<!-- ========== TESTIMONIAL (unique) ========== -->
+<section id="stkTestiSection">
+  <div class="stkTestiContainer">
+    <button class="stkTestiBtn" id="stkTestiPrev">❮</button>
+    <div class="stkTestiCard">
+      <div class="stkTestiContent">
+        <div class="stkTestiStars">★★★★★</div>
+        <p class="stkTestiQuote" id="stkQuote">Stackly provides smooth onboarding and powerful payment analytics dashboard for merchants.</p>
+        <div><span class="stkTestiAuthor" id="stkAuthor">Ananya Mehta</span><span class="stkTestiRole" id="stkRole"> | Founder, ShopEase</span></div>
+      </div>
+      <div class="stkTestiImage"><img id="stkImage" src="hr24.webp" alt="testimonial"></div>
+    </div>
+    <button class="stkTestiBtn" id="stkTestiNext">❯</button>
+  </div>
+</section>
+
+<!-- REVEAL ON SCROLL + TESTIMONIAL JS -->
+<script>
+  (function() {
+    // reveal sections
+    const reveals = document.querySelectorAll('.reveal');
+    function checkReveal() {
+      reveals.forEach(el => {
+        const top = el.getBoundingClientRect().top;
+        const winH = window.innerHeight;
+        if (top < winH - 80) el.classList.add('active');
+      });
+    }
+    window.addEventListener('scroll', checkReveal);
+    window.addEventListener('resize', checkReveal);
+    checkReveal();
+
+    // testimonial data
+    const stkTestimonials = [
+      { quote: "Stackly provides smooth onboarding and powerful payment analytics dashboard for merchants.", author: "Ananya Mehta", role: "| Founder, ShopEase", image: "hr1.webp" },
+      { quote: "Integration with Stackly payment gateway was extremely simple and improved our transaction success rate.", author: "Rahul Kapoor", role: "| CEO, UrbanCart", image: "hr3.webp" },
+      { quote: "Stackly dashboard gives real-time revenue insights and automated reconciliation for our business.", author: "Vikram Patel", role: "| CTO, PayWave", image: "hr13.webp" }
+    ];
+    let stkIndex = 0;
+    function updateTesti() {
+      document.getElementById('stkQuote').innerText = stkTestimonials[stkIndex].quote;
+      document.getElementById('stkAuthor').innerText = stkTestimonials[stkIndex].author;
+      document.getElementById('stkRole').innerText = stkTestimonials[stkIndex].role;
+      document.getElementById('stkImage').src = stkTestimonials[stkIndex].image;
+    }
+    document.getElementById('stkTestiNext').onclick = () => {
+      stkIndex = (stkIndex + 1) % stkTestimonials.length;
+      updateTesti();
+    };
+    document.getElementById('stkTestiPrev').onclick = () => {
+      stkIndex = (stkIndex - 1 + stkTestimonials.length) % stkTestimonials.length;
+      updateTesti();
+    };
+  })();
+</script>
+
+<!-- fallback small adjustment for missing images (just placeholder) – you can replace src with actual files -->
+<!-- all image names kept as per your code, but ensure they exist or replace with placeholders -->
+</body>
+</html>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Video Background */
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .video-background video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Dark Overlay */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        /* Content */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: left;
+            color: white;
+            max-width: 1200px;
+            width: 100%;
+            padding: 0 40px;
+            margin: 0 auto;
+        }
+
+        /* Main Text */
+        .hero-text {
+            margin-bottom: 40px;
+        }
+
+        .hero-text .line1 {
+            font-size: 48px;
+            font-weight: 500;
+            line-height: 1.2;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .hero-text .line2 {
+            font-size: 68px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .hero-text .line2 span {
+            display: block;
+        }
+
+        .hero-text .line3 {
+            font-size: 58px;
+            font-weight: 700;
+            line-height: 1.1;
+            color: #3b82f6;
+        }
+
+        .hero-text .line3 span {
+            display: block;
+        }
+
+        /* See how link */
+        .see-how {
+            margin-bottom: 60px;
+        }
+
+        .see-how a {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .see-how a:hover {
+            gap: 15px;
+            border-bottom-color: white;
+        }
+
+        .see-how i {
+            font-size: 24px;
+            color: #3b82f6;
+        }
+
+        /* Follow us */
+        .follow-us {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .follow-us span {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .social-icons a:hover {
+            opacity: 1;
+            color: #3b82f6;
+            transform: translateY(-3px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-text .line1 {
+                font-size: 40px;
+            }
+            .hero-text .line2 {
+                font-size: 55px;
+            }
+            .hero-text .line3 {
+                font-size: 48px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 0 30px;
+            }
+            .hero-text .line1 {
+                font-size: 32px;
+            }
+            .hero-text .line2 {
+                font-size: 42px;
+            }
+            .hero-text .line3 {
+                font-size: 38px;
+            }
+            .see-how a {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content {
+                padding: 0 20px;
+            }
+            .hero-text .line1 {
+                font-size: 26px;
+            }
+            .hero-text .line2 {
+                font-size: 34px;
+            }
+            .hero-text .line3 {
+                font-size: 30px;
+            }
+            .see-how {
+                margin-bottom: 40px;
+            }
+            .follow-us {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <!-- Video Background -->
+        <div class="video-background">
+            <video autoplay muted loop playsinline>
+                <source src="138315-769163810_medium (1) (1).mp4" type="video/mp4">
+                <!-- Fallback for browsers that don't support video -->
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Dark Overlay -->
+        <div class="overlay"></div>
+
+        <!-- Content -->
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="line1">Stackly Payment Gateway –</div>
+                <div class="line2">
+                    <span>so you can</span>
+                </div>
+                <div class="line3">
+                    <span>Fast, Secure & Smart Payments.</span>
+                </div>
+            </div>
+
+            <div class="see-how">
+                <a href="404.html">See how <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="follow-us">
+                <span>Follow us</span>
+                <div class="social-icons">
+                    <a href="404.html"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="404.html"><i class="fab fa-twitter"></i></a>
+                    <a href="404.html"><i class="fab fa-facebook-f"></i></a>
+                    <a href="404.html"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
+
+
+</body>
+</html>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f5f9ff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    /* ===== PREMIUM PAYMENT GATEWAY FOOTER ===== */
+    .footer {
+      background: #0f1a2b;  /* deep black-blue */
+      color: #e6ecf5;
+      border-top: 4px solid #2b6cff;
+      position: relative;
+      width: 100%;
+      box-shadow: 0 -20px 40px -15px rgba(0,0,0,0.3);
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #2b6cff, #ffffff, #2b6cff);
+      opacity: 0.5;
+    }
+
+    .footer-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 4rem 2.5rem 2rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 2.5rem;
+    }
+
+    /* Footer columns */
+    .footer-col h3 {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.2px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .footer-col h3::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: #2b6cff;
+      border-radius: 2px;
+    }
+
+    /* Brand column with logo image */
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-logo img {
+      height: auto;
+      width: 150px;
+      max-width: 160px;
+      object-fit: contain;
+      filter: brightness(0) invert(1); /* makes white logo - remove if logo is colored */
+    }
+
+    .footer-about {
+      color: #b0c6e0;
+      line-height: 1.7;
+      margin-bottom: 1.8rem;
+      font-size: 0.95rem;
+      max-width: 300px;
+    }
+
+    /* Social media icons - 4 items */
+    .footer-social {
+      display: flex;
+      gap: 15px;
+    }
+
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #1f2f44;
+      color: #2b6cff;
+      font-size: 1.3rem;
+      transition: 0.25s;
+      text-decoration: none;
+      border: 2px solid transparent;
+    }
+
+    .footer-social a:hover {
+      background: #2b6cff;
+      color: white;
+      transform: translateY(-5px);
+      border-color: white;
+    }
+
+    /* Links columns */
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 1rem;
+    }
+
+    .footer-col ul li a {
+      color: #c9d9f0;
+      text-decoration: none;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+
+    .footer-col ul li a i {
+      color: #2b6cff;
+      font-size: 0.8rem;
+      width: 18px;
+    }
+
+    .footer-col ul li a:hover {
+      color: white;
+      transform: translateX(5px);
+    }
+
+    /* Contact column */
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #c9d9f0;
+    }
+
+    .contact-item i {
+      width: 24px;
+      color: #2b6cff;
+      font-size: 1.1rem;
+    }
+
+    .payment-badges {
+      display: flex;
+      gap: 10px;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: #1f2f44;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: white;
+      border: 1px solid #2b6cff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge i {
+      color: #2b6cff;
+    }
+
+    /* Newsletter - IMPROVED MOBILE VERSION */
+    .newsletter {
+      margin-top: 1.5rem;
+    }
+
+    .newsletter h4 {
+      color: white;
+      font-size: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .newsletter-box {
+      display: flex;
+      background: #1a2538;
+      border-radius: 60px;
+      overflow: hidden;
+      border: 2px solid #2b6cff;
+      width: 100%;
+    }
+
+    .newsletter-box input {
+      flex: 1;
+      min-width: 0; /* prevents overflow on mobile */
+      padding: 0.9rem 1.2rem;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      width: 100%;
+    }
+
+    .newsletter-box input::placeholder {
+      color: #8a9fc0;
+    }
+
+    .newsletter-box button {
+      background: #2b6cff;
+      border: none;
+      padding: 0 1.2rem;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+      border-left: 2px solid white;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: auto;
+    }
+
+    .newsletter-box button i {
+      font-size: 0.9rem;
+    }
+
+    .newsletter-box button:hover {
+      background: white;
+      color: #0f1a2b;
+    }
+
+    .error-message {
+      color: #ff6b6b;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    /* Footer bottom */
+    .footer-bottom {
+      background: #0a1320;
+      padding: 1.5rem 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #1f3a70;
+      color: #9bb0d0;
+      font-size: 0.9rem;
+    }
+
+    .footer-bottom .legal-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-bottom .legal-links a {
+      color: #c9d9f0;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .footer-bottom .legal-links a:hover {
+      color: #2b6cff;
+    }
+
+    .footer-bottom .payment-icons i {
+      font-size: 1.5rem;
+      margin-left: 1rem;
+      color: #5f7d9e;
+      transition: 0.2s;
+    }
+
+    .footer-bottom .payment-icons i:hover {
+      color: #2b6cff;
+    }
+
+    /* Responsive */
+    @media (max-width: 1000px) {
+      .footer-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .footer-container {
+        grid-template-columns: 1fr;
+        padding: 3rem 1.5rem 1.5rem;
+      }
+      
+      .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        padding: 1.5rem;
+      }
+      
+      .footer-bottom .legal-links {
+        justify-content: center;
+        gap: 1rem;
+      }
+      
+      .footer-bottom .payment-icons {
+        margin-top: 0.5rem;
+      }
+      
+      .footer-bottom .payment-icons i {
+        margin: 0 0.5rem;
+      }
+      
+      /* Improved mobile newsletter */
+      .newsletter-box {
+        flex-direction: column;
+        border-radius: 30px;
+      }
+      
+      .newsletter-box input {
+        width: 100%;
+        text-align: center;
+        padding: 1rem;
+        border-bottom: 2px solid #2b6cff;
+      }
+      
+      .newsletter-box button {
+        width: 100%;
+        padding: 1rem;
+        border-left: none;
+        border-top: 2px solid white;
+        justify-content: center;
+      }
+    }
+
+    /* Extra small devices */
+    @media (max-width: 380px) {
+      .footer-social {
+        gap: 10px;
+      }
+      
+      .footer-social a {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+      }
+      
+      .badge {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- PREMIUM FOOTER - PAYMENT GATEWAY STYLE -->
+  <footer class="footer">
+    <div class="footer-container">
+      <!-- Column 1: Brand with logo image -->
+      <div class="footer-col">
+        <div class="footer-logo">
+          <!-- Logo image - replace src with your actual logo -->
+          <img src="stacklylogo (3).webp" alt="Stackly Pay" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span style="display:none; font-size:1.8rem; font-weight:700; color:white;">STACKLY<span style="color:#2b6cff;">pay</span></span>
+        </div>
+        <p class="footer-about">
+          Enterprise-grade payment gateway processing billions in transactions. Secure, scalable, and built for growth.
+        </p>
+        <!-- 4 SOCIAL MEDIA ICONS -->
+        <div class="footer-social">
+          <a href="404.html"><i class="fab fa-linkedin-in"></i></a>
+         
+          <a href="404.html"><i class="fab fa-instagram"></i></a>
+          <a href="404.html"><i class="fab fa-facebook-f"></i></a>
+        </div>
+      </div>
+
+      <!-- Column 2: Solutions (all links to 404) -->
+      <div class="footer-col">
+        <h3>Solutions</h3>
+        <ul>
+          <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+          <li><a href="soluation.html"><i class="fas fa-chevron-right"></i> Solution</a></li>
+          <li><a href="dashboard.html"><i class="fas fa-chevron-right"></i> Dashboard</a></li>
+          <li><a href="services.html"><i class="fas fa-chevron-right"></i> Services</a></li>
+          <li><a href="about.html"><i class="fas fa-chevron-right"></i> About</a></li>
+          <li><a href="blog.html"><i class="fas fa-chevron-right"></i> Blog</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Company (all links to 404) -->
+      <div class="footer-col">
+        <h3>Company</h3>
+        <ul>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> About Us</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Careers</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Blog</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Press</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Partners</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Contact & Newsletter with validation -->
+      <div class="footer-col">
+        <h3>Connect</h3>
+        <div class="contact-item">
+          <i class="fas fa-map-pin"></i>
+          <span>100 Financial District, Bengaluru, India 571426</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-phone-alt"></i>
+          <span>+91 9568759723</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-envelope"></i>
+          <span>hello@stacklypay.com</span>
+        </div>
+
+        <!-- Payment badges -->
+        <div class="payment-badges">
+          <span class="badge"><i class="fab fa-cc-visa"></i> Visa</span>
+          <span class="badge"><i class="fab fa-cc-mastercard"></i> MC</span>
+          <span class="badge"><i class="fab fa-cc-amex"></i> Amex</span>
+        </div>
+
+        <!-- Newsletter with email validation -->
+        <div class="newsletter">
+          <h4>Stay updated</h4>
+          <div class="newsletter-box">
+            <input type="email" placeholder="your@email.com" id="newsletterEmail">
+            <button id="subscribeBtn"><i class="fas fa-paper-plane"></i> Subscribe</button>
+          </div>
+          <div class="error-message" id="emailError">Please enter a valid email address</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer bottom (all links to 404) -->
+    <div class="footer-bottom">
+      <div class="copyright">
+        © 2026 Stackly Pay. All rights reserved.
+      </div>
+      <div class="legal-links">
+        <a href="404.html">Privacy Policy</a>
+        <a href="404.html">Terms of Service</a>
+        <a href="404.html">Cookie Policy</a>
+        <a href="404.html">GDPR</a>
+      </div>
+      <div class="payment-icons">
+        <i class="fab fa-cc-visa"></i>
+        <i class="fab fa-cc-mastercard"></i>
+        <i class="fab fa-cc-amex"></i>
+        <i class="fab fa-cc-paypal"></i>
+        <i class="fab fa-cc-stripe"></i>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      // Email validation and redirect to 404
+      const emailInput = document.getElementById('newsletterEmail');
+      const subscribeBtn = document.getElementById('subscribeBtn');
+      const emailError = document.getElementById('emailError');
+
+      function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+
+      function handleSubscribe() {
+        const email = emailInput.value.trim();
+        
+        if (email === '' || !validateEmail(email)) {
+          emailError.classList.add('show');
+        } else {
+          emailError.classList.remove('show');
+          // Redirect to 404 page
+          window.location.href = '404.html';
+        }
+      }
+
+      if (subscribeBtn && emailInput) {
+        subscribeBtn.addEventListener('click', handleSubscribe);
+        
+        emailInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            handleSubscribe();
+          }
+        });
+
+        // Clear error when user starts typing
+        emailInput.addEventListener('input', () => {
+          emailError.classList.remove('show');
+        });
+      }
+
+      // All footer links already point to 404.html
+    })();
+  </script>
+</body>
+</html>
